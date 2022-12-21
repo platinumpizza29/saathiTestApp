@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saathitest/components/SaveComp.dart';
+import 'package:saathitest/pages/SettingsPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,8 +25,20 @@ class _HomePageState extends State<HomePage> {
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
             "Saathi",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+                color: Colors.black, fontSize: 30, fontWeight: FontWeight.bold),
           ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) => SettingsPage()));
+                },
+                icon: Icon(
+                  Icons.settings,
+                  size: 30,
+                ))
+          ],
           bottom: TabBar(
               labelColor: Colors.black,
               indicatorColor: Colors.black,
@@ -47,10 +61,10 @@ class _HomePageState extends State<HomePage> {
         body: TabBarView(children: [
           SaveComp(),
           Center(
-            child: Text("It's rainy here"),
+            child: Text("Earn Page Content"),
           ),
           Center(
-            child: Text("It's sunny here"),
+            child: Text("Learn Page Content"),
           ),
         ]),
       ),

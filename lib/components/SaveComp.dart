@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:saathitest/pages/NewGoalPage.dart';
 
 class SaveComp extends StatefulWidget {
   const SaveComp({super.key});
@@ -25,8 +24,9 @@ class _SaveCompState extends State<SaveComp> {
       if (response.statusCode == 200) {
         var data = response.body;
         var decodedData = jsonDecode(data);
-        allGoals = decodedData;
-        print(allGoals);
+        setState(() {
+          allGoals = decodedData;
+        });
       } else {
         print("error fetching Data");
       }
@@ -37,14 +37,15 @@ class _SaveCompState extends State<SaveComp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getAllGoals();
+    setState(() {
+      getAllGoals();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -61,7 +62,10 @@ class _SaveCompState extends State<SaveComp> {
               trailing: ElevatedButton.icon(
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) => NewGoal()));
+                  },
                   icon: Icon(Icons.add),
                   label: Text("Goal")),
             ),
@@ -70,76 +74,84 @@ class _SaveCompState extends State<SaveComp> {
             ),
             Align(
               alignment: Alignment.topCenter,
-              child: Container(
+              child: SizedBox(
                 height: 400,
                 width: double.infinity,
-                child: ListView.builder(
-                  itemCount: allGoals.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      enableFeedback: true,
-                      onTap: () {
-                        showCupertinoModalPopup(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CupertinoActionSheet(
-                                cancelButton: CupertinoButton.filled(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    }),
-                                title: Text("More Options for"),
-                                message: Text(allGoals[index]['goalName']
-                                    .toString()
-                                    .toUpperCase()),
-                                actions: [
-                                  CupertinoActionSheetAction(
-                                    /// This parameter indicates the action would be a default
-                                    /// defualt behavior, turns the action's text to bold text.
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Status'),
-                                  ),
-                                  CupertinoActionSheetAction(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Update'),
-                                  ),
-                                  CupertinoActionSheetAction(
-                                    isDestructiveAction: true,
-                                    onPressed: () {
-                                      var goalID = allGoals[index]["_id"];
-                                      handleDeleteGoal(goalID);
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Delete'),
-                                  ),
-                                ],
-                              );
-                            });
-                      },
-                      enabled: allGoals[index]['goalState'] == 'Active'
-                          ? true
-                          : false,
-                      title: Text(
-                        allGoals[index]['goalName'].toString().toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Text(allGoals[index]['goalState'].toString()),
-                      trailing: Text(
-                        allGoals[index]['goalAmount'].toString().toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await getAllGoals();
                   },
+                  child: ListView.builder(
+                    itemCount: allGoals.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        enableFeedback: true,
+                        onTap: () {},
+                        onLongPress: () {
+                          showCupertinoModalPopup(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CupertinoActionSheet(
+                                  cancelButton: CupertinoButton.filled(
+                                      child: Text("Cancel"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      }),
+                                  title: Text("More Options for"),
+                                  message: Text(allGoals[index]['goalName']
+                                      .toString()
+                                      .toUpperCase()),
+                                  actions: [
+                                    CupertinoActionSheetAction(
+                                      /// This parameter indicates the action would be a default
+                                      /// defualt behavior, turns the action's text to bold text.
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Status'),
+                                    ),
+                                    CupertinoActionSheetAction(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Update'),
+                                    ),
+                                    CupertinoActionSheetAction(
+                                      isDestructiveAction: true,
+                                      onPressed: () {
+                                        var goalID = allGoals[index]["_id"];
+                                        handleDeleteGoal(goalID);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('Delete'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
+                        enabled: allGoals[index]['goalState'] == 'Active'
+                            ? true
+                            : false,
+                        title: Text(
+                          allGoals[index]['goalName'].toString().toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(allGoals[index]['goalState'].toString()),
+                        trailing: Text(
+                          allGoals[index]['goalAmount']
+                              .toString()
+                              .toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -147,30 +159,6 @@ class _SaveCompState extends State<SaveComp> {
         ),
       ),
     );
-  }
-
-  deleteConfirmation() {
-    showCupertinoModalPopup(
-        context: context,
-        builder: (BuildContext context) {
-          return CupertinoAlertDialog(
-            title: Text("Are you sure?"),
-            content: Text("Do you want to delete the goal"),
-            actions: [
-              CupertinoDialogAction(
-                child: Text("No"),
-                isDefaultAction: true,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              CupertinoDialogAction(
-                child: Text("Yes"),
-                onPressed: () {},
-              )
-            ],
-          );
-        });
   }
 
   Future handleDeleteGoal(var id) async {
