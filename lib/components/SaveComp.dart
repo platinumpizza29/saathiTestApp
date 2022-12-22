@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:saathitest/components/GoalDetailsPage.dart';
 import 'package:saathitest/pages/NewGoalPage.dart';
 
 class SaveComp extends StatefulWidget {
@@ -16,6 +17,8 @@ class SaveComp extends StatefulWidget {
 class _SaveCompState extends State<SaveComp> {
   var savingsValue = 10000;
   var allGoals = [];
+  var amountToSave;
+  var temp1;
 
   getAllGoals() async {
     var path = 'http://192.168.1.137:4000/goal/allGoals';
@@ -27,6 +30,7 @@ class _SaveCompState extends State<SaveComp> {
         setState(() {
           allGoals = decodedData;
         });
+        print(amountToSave);
       } else {
         print("error fetching Data");
       }
@@ -86,7 +90,16 @@ class _SaveCompState extends State<SaveComp> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         enableFeedback: true,
-                        onTap: () {},
+                        onTap: () {
+                          var id = allGoals[index]['_id'];
+                          print(id);
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => GoalDetails(
+                                        id: id,
+                                      )));
+                        },
                         onLongPress: () {
                           showCupertinoModalPopup(
                               context: context,

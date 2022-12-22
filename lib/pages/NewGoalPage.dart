@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:saathitest/components/ImageComp.dart';
@@ -76,6 +75,7 @@ class _NewGoalState extends State<NewGoal> {
                   Step(
                     title: Text('Enter name for your goal'),
                     content: CupertinoTextField(
+                      autofocus: true,
                       controller: goalNameController,
                       placeholder: 'Name',
                     ),
@@ -99,6 +99,7 @@ class _NewGoalState extends State<NewGoal> {
                   Step(
                     title: Text('Goal Amount'),
                     content: CupertinoTextField(
+                      autofocus: true,
                       controller: goalAmountController,
                       keyboardType: TextInputType.number,
                       placeholder: 'Amount e.g 2000',
@@ -107,6 +108,7 @@ class _NewGoalState extends State<NewGoal> {
                   Step(
                     title: Text('Goal Currency'),
                     content: CupertinoTextField(
+                      autofocus: true,
                       controller: goalCurrencyController,
                       keyboardType: TextInputType.text,
                       placeholder: 'Currency e.g. Rupees or Dollars',
@@ -115,6 +117,7 @@ class _NewGoalState extends State<NewGoal> {
                   Step(
                     title: Text('Goal Duration'),
                     content: CupertinoTextField(
+                      autofocus: true,
                       controller: goalDurationController,
                       keyboardType: TextInputType.number,
                       placeholder: 'Amount',
@@ -123,6 +126,7 @@ class _NewGoalState extends State<NewGoal> {
                   Step(
                       title: Text('Goal Duration Type'),
                       content: CupertinoTextField(
+                        autofocus: true,
                         controller: goalDurationTypeController,
                         keyboardType: TextInputType.text,
                         placeholder: 'E.g. Months or Year',
@@ -148,7 +152,8 @@ class _NewGoalState extends State<NewGoal> {
                     var goalAmount = goalAmountController.text;
                     var goalCurrency = goalCurrencyController.text;
                     var goalDuration = goalDurationController.text;
-                    var goalDurationType = goalDurationTypeController.text;
+                    var goalDurationType =
+                        goalDurationTypeController.text.toUpperCase();
                     var timeStamp = DateTime.now().toString();
                     http.Response response =
                         await http.post(Uri.parse(uri), body: {
@@ -172,7 +177,6 @@ class _NewGoalState extends State<NewGoal> {
       ),
     );
   }
-
 
   Future<void> pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
