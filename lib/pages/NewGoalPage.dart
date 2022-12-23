@@ -147,7 +147,8 @@ class _NewGoalState extends State<NewGoal> {
                       minimumSize: Size.fromHeight(40),
                       backgroundColor: Colors.black),
                   onPressed: () async {
-                    var uri = "http://192.168.1.137:4000/goal/createGoal";
+                    var uri =
+                        "https://06c7-2a00-23c5-ba10-a701-c41b-5c6e-69e4-f283.eu.ngrok.io/goal/createGoal";
                     var goalName = goalNameController.text;
                     var goalAmount = goalAmountController.text;
                     var goalCurrency = goalCurrencyController.text;

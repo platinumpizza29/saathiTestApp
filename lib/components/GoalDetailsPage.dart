@@ -16,10 +16,11 @@ class GoalDetails extends StatefulWidget {
 
 class _GoalDetailsState extends State<GoalDetails> {
   var goalDetails;
-  var switchValue = false;
+  var switchValue = true;
 
   getGoalDetails() async {
-    var uri = "http://192.168.1.137:4000/goal/findOneGoal/";
+    var uri =
+        "https://06c7-2a00-23c5-ba10-a701-c41b-5c6e-69e4-f283.eu.ngrok.io/goal/findOneGoal/";
     var id = widget.id;
     http.Response response = await http.post(Uri.parse(uri), body: {"id": id});
     var decodedGoal = json.decode(response.body);
@@ -81,12 +82,29 @@ class _GoalDetailsState extends State<GoalDetails> {
                 subtitle: Text(goalDetails['goalDurationType'].toString()),
               ),
               ListTile(
+                title: Text("Duration Amount"),
+                subtitle: Text(goalDetails['goalDurationAmount'].toString()),
+              ),
+              ListTile(
                 title: Text("Creation Date"),
                 subtitle: Text(goalDetails['goalCreatedDate'].toString()),
               ),
               ListTile(
                 title: Text("State"),
                 subtitle: Text(goalDetails['goalState'].toString()),
+                trailing: CupertinoSwitch(
+                    value: switchValue,
+                    onChanged: (val) async {
+                      setState(() {
+                        switchValue = val;
+                      });
+                      var id = goalDetails["_id"];
+                      print(id);
+                      var uri =
+                          "https://06c7-2a00-23c5-ba10-a701-c41b-5c6e-69e4-f283.eu.ngrok.io/goal/updateGoal/";
+                      http.Response response = await http.post(Uri.parse(uri),
+                          body: {"status": switchValue.toString(), "id": id});
+                    }),
               ),
             ],
           ),

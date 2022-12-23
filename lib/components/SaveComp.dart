@@ -21,7 +21,8 @@ class _SaveCompState extends State<SaveComp> {
   var temp1;
 
   getAllGoals() async {
-    var path = 'http://192.168.1.137:4000/goal/allGoals';
+    var path =
+        'https://06c7-2a00-23c5-ba10-a701-c41b-5c6e-69e4-f283.eu.ngrok.io/goal/allGoals';
     http.Response response = await http.get(Uri.parse(path));
     try {
       if (response.statusCode == 200) {
@@ -116,20 +117,6 @@ class _SaveCompState extends State<SaveComp> {
                                       .toUpperCase()),
                                   actions: [
                                     CupertinoActionSheetAction(
-                                      /// This parameter indicates the action would be a default
-                                      /// defualt behavior, turns the action's text to bold text.
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Status'),
-                                    ),
-                                    CupertinoActionSheetAction(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Update'),
-                                    ),
-                                    CupertinoActionSheetAction(
                                       isDestructiveAction: true,
                                       onPressed: () {
                                         var goalID = allGoals[index]["_id"];
@@ -142,7 +129,8 @@ class _SaveCompState extends State<SaveComp> {
                                 );
                               });
                         },
-                        enabled: allGoals[index]['goalState'] == 'Active'
+                        enabled: allGoals[index]['goalState'] == 'Active' ||
+                                allGoals[index]['goalState'] == 'true'
                             ? true
                             : false,
                         title: Text(
@@ -175,7 +163,8 @@ class _SaveCompState extends State<SaveComp> {
   }
 
   Future handleDeleteGoal(var id) async {
-    var url = 'http://192.168.1.137:4000/goal/deleteGoal';
+    var url =
+        'https://06c7-2a00-23c5-ba10-a701-c41b-5c6e-69e4-f283.eu.ngrok.io/goal/deleteGoal';
     http.Response response = await http.post(Uri.parse(url), body: {"id": id});
     if (response.statusCode == 200) {
       const snackBar = SnackBar(
